@@ -9,6 +9,9 @@ This project is a FastAPI and Streamlit-based web application for predicting ins
 - REST API endpoints (FastAPI)
 - Docker support for easy deployment
 
+## Live Demo
+[Access the app here](https://insurance-prediction-shikher09.streamlit.app/)
+
 ## Project Structure
 - `main.py`: FastAPI backend
 - `frontend.py`: Streamlit frontend
