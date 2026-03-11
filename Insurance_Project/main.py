@@ -16,7 +16,6 @@ schema.db_inputs.Base.metadata.create_all(bind=engine)
 def read_root():
     return {"message": "Welcome to the Insurance Premium Prediction API!"}
 
-
 @app.get("/health")
 def health_check():
     return {"status": "ok", "version": MODEL__VERSION, "model_info" : model is not None} 
