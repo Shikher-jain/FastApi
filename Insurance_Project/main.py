@@ -2,10 +2,15 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
 from schema.user_input import InsuranceData
+
+import schema.db_inputs
+from config.db import Session,engine 
 from model.predict import predict_output, model, MODEL__VERSION
 from schema.prediction_response import PredictionResponse
 
 app = FastAPI()
+
+schema.db_inputs.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
