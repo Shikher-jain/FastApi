@@ -14,3 +14,4 @@ class InsuranceData(Base):
     smoker: bool = Column(Boolean, nullable=False)  
     city: str = Column(String, nullable=False)
     occupation: Literal['retired', 'freelancer', 'student', 'government_job','business_owner', 'unemployed', 'private_job'] = Column(String, nullable=False)
+ 

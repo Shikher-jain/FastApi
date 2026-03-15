@@ -10,4 +10,4 @@ port = 5432
 
 engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}")
 Session = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-     
+      
