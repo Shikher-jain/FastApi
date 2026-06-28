@@ -2,6 +2,12 @@ import streamlit as st
 import requests
 import base64
 import urllib.parse
+import re
+
+def extract_username_from_email(email):
+    """Extract username from email by removing digits and domain"""
+    return re.sub(r'\d+', '', email.split("@")[0])
+
 
 st.set_page_config(page_title="Simple Social", layout="wide")
 
@@ -163,7 +169,7 @@ if st.session_state.user is None:
     login_page()
 else:
     # Sidebar navigation
-    st.sidebar.title(f"👋 Hi {st.session_state.user['email']}!")
+    st.sidebar.title(f"👋 Hi {extract_username_from_email(st.session_state.user['email'])}!")
 
     if st.sidebar.button("Logout"):
         st.session_state.user = None
