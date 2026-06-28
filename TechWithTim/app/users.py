@@ -11,6 +11,8 @@ import os
 
 load_dotenv()
 SECRET = os.getenv("SECRET")
+if not SECRET:
+    raise ValueError("SECRET is not set in environment variables")
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET

@@ -1,14 +1,16 @@
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form, Depends
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.schemas import PostCreate, PostResponse, UserRead, UserCreate, UserUpdate
 from app.db import Post, get_async_session, create_db_and_tables, User
+from app.users import current_active_user, auth_backend, fastapi_users 
+from app.images import imagekit
+
 from sqlalchemy.ext.asyncio import AsyncSession
-from contextlib import asynccontextmanager
 from sqlalchemy import select
 
-from app.images import imagekit
+from contextlib import asynccontextmanager
 from imagekitio.models.UploadFileRequestOptions import UploadFileRequestOptions 
-
-from app.users import current_active_user, auth_backend, fastapi_users 
 
 import os ,shutil, uuid, tempfile 
 
@@ -18,6 +20,13 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
@@ -49,9 +58,10 @@ app.include_router(
     tags=["users"],
 )
 
+
 @app.get("/")
-async def root():
-    return {"message": "API is running "}
+def health():
+    return {"status": "ok"}
 
 @app.post("/upload")
 async def upload_file(

@@ -6,13 +6,20 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DateTime
 
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
-
+from dotenv import load_dotenv
 # from app.app import Depends 
+import os
 
-DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is not set")
+
 
 class Base(DeclarativeBase):
     pass
@@ -30,11 +37,21 @@ class Post(Base):
     url = Column(String, nullable=True)
     file_type = Column(String, nullable=True)
     file_name = Column(String, nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    # created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
 
     user = relationship("User", back_populates="posts")
 
-engine = create_async_engine(DATABASE_URL)
+# engine = create_async_engine(DATABASE_URL)
+
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=False,
+    pool_size=5,
+    max_overflow=10
+)
+
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
